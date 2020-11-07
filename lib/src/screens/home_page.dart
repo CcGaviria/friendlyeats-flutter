@@ -20,18 +20,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'restaurant_page.dart';
-import 'model/data.dart' as data;
-import 'model/filter.dart';
-import 'model/restaurant.dart';
-import 'widgets/empty_list.dart';
-import 'widgets/filter_bar.dart';
-import 'widgets/grid.dart';
-import 'widgets/dialogs/filter_select.dart';
+import '../model/data.dart' as data;
+import '../model/filter.dart';
+import '../model/restaurant.dart';
+import '../widgets/empty_list.dart';
+import '../widgets/filter_bar.dart';
+import '../widgets/grid.dart';
+import '../widgets/dialogs/filter_select.dart';
 
 class HomePage extends StatefulWidget {
   static const route = '/';
-
-  HomePage({Key key}) : super(key: key);
+  String currentUser;
+  HomePage({this.currentUser});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> {
                       onRestaurantPressed: (id) {
                         // TODO: Add deep links on web
                         Navigator.pushNamed(context, RestaurantPage.route,
-                            arguments: RestaurantPageArguments(id: id));
+                            arguments: RestaurantPageArguments(id: id, currentUser:widget.currentUser));
                       })
                   : EmptyListView(
                       child: Text('FriendlyEats has no restaurants yet!'),

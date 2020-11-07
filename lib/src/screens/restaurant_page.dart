@@ -21,21 +21,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sliver_fab/sliver_fab.dart';
 
-import 'widgets/empty_list.dart';
-import 'model/data.dart' as data;
-import 'model/restaurant.dart';
-import 'model/review.dart';
-import 'widgets/app_bar.dart';
-import 'widgets/review.dart';
-import 'widgets/dialogs/review_create.dart';
+import '../widgets/empty_list.dart';
+import '../model/data.dart' as data;
+import '../model/restaurant.dart';
+import '../model/review.dart';
+import '../widgets/app_bar.dart';
+import '../widgets/review.dart';
+import '../widgets/dialogs/review_create.dart';
 
 class RestaurantPage extends StatefulWidget {
   static const route = '/restaurant';
 
   final String _restaurantId;
+  final String currentUser;
 
-  RestaurantPage({Key key, @required String restaurantId})
-      : _restaurantId = restaurantId,
+  RestaurantPage({Key key, @required String restaurantId, @required String currentUser})
+      : _restaurantId = restaurantId, currentUser = currentUser,
         super(key: key);
 
   @override
@@ -44,43 +45,50 @@ class RestaurantPage extends StatefulWidget {
 }
 
 class _RestaurantPageState extends State<RestaurantPage> {
+  StreamSubscription<DocumentSnapshot> _currentSubscription;
   _RestaurantPageState({@required String restaurantId}) {
     FirebaseAuth.instance
         .signInAnonymously()
         .then((UserCredential userCredential) {
-      data.getRestaurant(restaurantId).then((Restaurant restaurant) {
-        _currentReviewSubscription?.cancel();
-        setState(() {
-          if (userCredential.user.displayName == null ||
-              userCredential.user.displayName.isEmpty) {
-            _userName = 'Anonymous (${kIsWeb ? "Web" : "Mobile"})';
-          } else {
-            _userName = userCredential.user.displayName;
-          }
-          _restaurant = restaurant;
-          _userId = userCredential.user.uid;
+          setState(() {
+            if (widget.currentUser == null) {
+              _userName = 'Anonymous (${kIsWeb ? "Web" : "Mobile"})';
+            } else {
+              _userName = widget.currentUser;
+            }
+            _userId = userCredential.user.uid;}
+          );
+          _currentSubscription?.cancel();
+          _currentSubscription = data.loadRestaurant(restaurantId).listen(_updateRestaurant);
+    });
+  }
 
-          // Initialize the reviews snapshot...
-          _currentReviewSubscription = _restaurant.reference
-              .collection('ratings')
-              .orderBy('timestamp', descending: true)
-              .snapshots()
-              .listen((QuerySnapshot reviewSnap) {
-            setState(() {
-              _isLoading = false;
-              _reviews = reviewSnap.docs.map((DocumentSnapshot doc) {
-                return Review.fromSnapshot(doc);
-              }).toList();
-            });
-          });
-        });
-      });
+  void _updateRestaurant (DocumentSnapshot snapshot) async {
+    Restaurant rest;
+    rest = await data.getRestaurantFromQuery(snapshot);
+    setState(() {
+      _restaurant = rest;
+    });
+
+    _currentReviewSubscription?.cancel();
+    _currentReviewSubscription = _restaurant.reference
+        .collection('ratings')
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .listen(_updateReviews);
+  }
+
+  void _updateReviews (QuerySnapshot reviewSnap) {
+    setState(() {
+      _isLoading = false;
+      _reviews = reviewSnap.docs.map((DocumentSnapshot doc) {
+        return Review.fromSnapshot(doc);
+      }).toList();
     });
   }
 
   @override
   void dispose() {
-    _currentReviewSubscription?.cancel();
     super.dispose();
   }
 
@@ -169,6 +177,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
 
 class RestaurantPageArguments {
   final String id;
+  final String currentUser;
 
-  RestaurantPageArguments({@required this.id});
+  RestaurantPageArguments({@required this.id, @required this.currentUser});
 }

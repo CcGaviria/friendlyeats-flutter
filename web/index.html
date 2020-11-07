@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <!--
  Copyright 2020 Google LLC
 
@@ -6,7 +6,7 @@
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,14 +27,19 @@
   <meta name="apple-mobile-web-app-title" content="friendlyeats">
   <link rel="apple-touch-icon" href="/icons/Icon-192.png">
 
+  <meta name="google-signin-client_id" content="688266775840-3jjsb0iicbmosqelf555ij59f8d6p2sd.apps.googleusercontent.com">
   <!-- Favicon -->
   <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
 
   <title>friendlyeats</title>
   <link rel="manifest" href="/manifest.json">
+  <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>
 
   <!-- The core Firebase JS SDK is always required and must be listed first -->
-  <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-firestore.js"></script>
 
   <!-- TODO: Add SDKs for Firebase products that you want to use
        (firebase-auth.js, firebase-firestore.js, firebase-analytics.js...)
@@ -43,18 +48,18 @@
 
   <script>
     // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     var firebaseConfig = {
-      apiKey: "YoUr_RaNdOm_API_kEy",
-      authDomain: "your-project-name.firebaseapp.com",
-      databaseURL: "https://your-project-name.firebaseio.com",
-      projectId: "your-project-name",
-      storageBucket: "your-project-name.appspot.com",
-      messagingSenderId: "012345678901",
-      appId: "1:109876543210:web:r4nd0mH3xH45h",
-      measurementId: "G-S0M3V4LU3"
+      apiKey: "AIzaSyDxP4jBYcsFpwK7U8SrvK2dMV2nnubbaSI",
+      authDomain: "friendlyeats-1dfa1.firebaseapp.com",
+      databaseURL: "https://friendlyeats-1dfa1.firebaseio.com",
+      projectId: "friendlyeats-1dfa1",
+      storageBucket: "friendlyeats-1dfa1.appspot.com",
+      messagingSenderId: "817952873651",
+      appId: "1:817952873651:web:a364922977d739de47e4c6",
+      measurementId: "G-X4K4ZTZLGD"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     firebase.analytics();
   </script>

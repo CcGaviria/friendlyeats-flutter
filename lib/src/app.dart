@@ -14,10 +14,12 @@
 
 import 'package:flutter/material.dart';
 
-import 'home_page.dart';
-import 'restaurant_page.dart';
+import 'screens/home_page.dart';
+import 'screens/login_page.dart';
+import 'screens/restaurant_page.dart';
 
 class FriendlyEatsApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,6 +31,7 @@ class FriendlyEatsApp extends StatelessWidget {
             return MaterialPageRoute(
                 builder: (context) => RestaurantPage(
                       restaurantId: arguments.id,
+                      currentUser: arguments.currentUser,
                     ));
             break;
           default:
@@ -37,7 +40,7 @@ class FriendlyEatsApp extends StatelessWidget {
             //           restaurantId: 'lV81npEeboEActMpUJjn',
             //         ));
             // Everything defaults to home, but maybe we want a custom 404 here
-            return MaterialPageRoute(builder: (context) => HomePage());
+            return MaterialPageRoute(builder: (context) => LoginPage());
         }
       },
     );
